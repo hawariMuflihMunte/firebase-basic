@@ -1,0 +1,19 @@
+{
+  "name": "firebase-basic",
+  "version": "1.0.0",
+  "description": "learning purpose",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hawariMuflihMunte/firebase-basic.git"
+  },
+  "author": "Hawari Muflih Munte <hawari.muflih.munte@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hawariMuflihMunte/firebase-basic/issues"
+  },
+  "homepage": "https://github.com/hawariMuflihMunte/firebase-basic#readme"
+}
