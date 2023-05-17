@@ -1,30 +1,74 @@
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore/lite";
-import * as auth from "firebase/auth";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+import * as firebase from '../firebase';
 
-// src/index.js
+const signInButton = document.getElementById('signin-button');
+const signOutButton = document.getElementById('signout-button');
 
-const firebaseConfig = {
-  apiKey: "AIzaSyB7VEjBOSp1WofZY96Rb_JlpD7yePqODsM",
-  authDomain: "basic-app-6d38b.firebaseapp.com",
-  projectId: "basic-app-6d38b",
-  storageBucket: "basic-app-6d38b.appspot.com",
-  messagingSenderId: "495084675859",
-  appId: "1:495084675859:web:217c9c99caf7ed8f31f0e6",
-  measurementId: "G-J79N2E3267"
-};
+const {
+  auth,
+  authentication
+} = firebase;
 
-const firebaseApp = initializeApp(firebaseConfig);
-const db = getFirestore(firebaseApp);
+signInButton.addEventListener('click', () => {
+  const provider = new authentication.GoogleAuthProvider()
+    authentication.signInWithPopup(auth, provider)
+      .then((result) => {
 
-async function loadCity(name) {
-  const cityDoc = doc(db, `cities/${name}`);
-  const snapshot = await getDoc(cityDoc);
-  return {
-    id: snapshot.id,
-    ...snapshot.data(),
-  };
-}
+        // This gives you a Google Access Token. You can use it to access the Google API.
+        const credential = authentication.GoogleAuthProvider.credentialFromResult(result);
+        const token = credential.accessToken;
+
+        // The signed-in user info.
+        const user = result.user;
+      })
+      .catch((error) => {
+        // Handle errors here.
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        // The email of the user's account used.
+        const email = error.customData.email;
+        // The AuthCredential type that was used.
+        const credential = authentication.GoogleAuthProvider.credentialFromError(error);
+      })
+});
+
+signOutButton.addEventListener('click', () => {
+  auth.signOut()
+      .then(() => {
+        console.log('User signed out');
+      })
+      .catch((error) => {
+        console.error(`Sign-out error: ${error}`);
+      })
+});
+
+// Attach the onAuthStateChanged listener when your app initializes
+auth.onAuthStateChanged((user) => {
+  if (user) {
+    // User is signed in
+    // Perform actions for authenticated user
+    console.log('User is signed in:', user.uid);
+    console.log(user.displayName)
+    // Update UI, redirect, fetch user data, etc.
+
+    document.body.innerHTML = `
+      <h1>${user.displayName}</h1>
+      <button id="signout-button">Sign Out</button>
+    `;
+
+    document.querySelector('#signout-button').addEventListener('click', () => {
+      auth.signOut()
+          .then(() => {
+            console.log('User signed out');
+          })
+          .catch((error) => {
+            console.error(`Sign-out error: ${error}`);
+          })
+    });
+
+  } else {
+    // User is signed out
+    // Perform actions for non-authenticated user
+    console.log('User is signed out');
+    // Update UI, redirect, etc.
+  }
+});
