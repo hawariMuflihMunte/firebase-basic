@@ -5,7 +5,7 @@ module.exports = {
   entry: './src/index.js',  // Adjust the entry point as per your project structure
   output: {
     filename: 'bundle.js',
-    path: path.resolve(__dirname, 'dist')  // Adjust the output path as per your project structure
+    path: path.resolve(__dirname, 'public')  // Adjust the output path as per your project structure
   },
   module: {
     rules: [
